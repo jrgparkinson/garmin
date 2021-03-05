@@ -17,7 +17,7 @@
 <body class="text-center">
 
 
-    <form class="form-activate">
+    <form class="form-activate" action="#">
 
         <!-- <h1>Device key activation</h1> -->
         <p>Activate your device key to continue using the Garmin IQ cricket results app.</p>
@@ -26,7 +26,9 @@
             <input type="text" class="form-control form-control-lg" id="device-key" placeholder="83295918653">
         </div>
 
-        <button type="submit" class="btn btn-primary form-control-lg">Activate device key</button>
+        <button type="submit" class="btn btn-primary form-control-lg" id="checkout-button-price_1IRbpbCpTu4joodyy9xPtP7s">Activate device key</button>
+
+        <div id="error-message"></div>
 
 
         <div class="card" id="about">
@@ -51,6 +53,48 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://js.stripe.com/v3"></script>
+
+    <script>
+        (function() {
+            var stripe = Stripe('pk_live_51IRajLCpTu4joody33fLjOyDqOhygk5rk9vBMuRuewKQVaBuyKgQt7NPEX6AY89bGy5LG6GT2W94vXhzFXuNVHCD00C9Z2tWsU');
+
+            var checkoutButton = document.getElementById('checkout-button-price_1IRbpbCpTu4joodyy9xPtP7s');
+            checkoutButton.addEventListener('click', function() {
+                /*
+                 * When the customer clicks on the button, redirect
+                 * them to Checkout.
+                 */
+                stripe.redirectToCheckout({
+                        lineItems: [{
+                            price: 'price_1IRbpbCpTu4joodyy9xPtP7s',
+                            quantity: 1,
+                        }],
+                        clientReferenceId: $("#device-key").val(),
+                        mode: 'payment',
+                        /*
+                         * Do not rely on the redirect to the successUrl for fulfilling
+                         * purchases, customers may not always reach the success_url after
+                         * a successful payment.
+                         * Instead use one of the strategies described in
+                         * https://stripe.com/docs/payments/checkout/fulfill-orders
+                         */
+                        successUrl: 'https://jrgparkinson.github.io/garmin/success.html',
+                        cancelUrl: 'https://jrgparkinson.github.io/garmin/canceled.html',
+                    })
+                    .then(function(result) {
+                        if (result.error) {
+                            /*
+                             * If `redirectToCheckout` fails due to a browser or network
+                             * error, display the localized error message to your customer.
+                             */
+                            var displayError = document.getElementById('error-message');
+                            displayError.textContent = result.error.message;
+                        }
+                    });
+            });
+        })();
+    </script>
 
 </body>
 
