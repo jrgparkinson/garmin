@@ -57,7 +57,20 @@
 
     <script>
         (function() {
-            var stripe = Stripe('pk_live_51IRajLCpTu4joody33fLjOyDqOhygk5rk9vBMuRuewKQVaBuyKgQt7NPEX6AY89bGy5LG6GT2W94vXhzFXuNVHCD00C9Z2tWsU');
+            var publicKey, price;
+            if (window.location.href == "file:///home/parkinsonjl/websites/garmin/index.html") {
+                // Testing
+                console.log("Testing mode");
+                publicKey = "pk_test_51IRajLCpTu4joodyLjV1q6SMnoyQHYIFHBSQl74TEa9MWR3QMcVSQWkeqBgPBcPsrsuixuLMUMIvn7Ght6vvOP5q001vR8CPaZ";
+                price = "price_1IRdBLCpTu4joodyLRyvhajh";
+            } else {
+                // Live
+                publicKey = 'pk_live_51IRajLCpTu4joody33fLjOyDqOhygk5rk9vBMuRuewKQVaBuyKgQt7NPEX6AY89bGy5LG6GT2W94vXhzFXuNVHCD00C9Z2tWsU';
+                price = 'price_1IRbpbCpTu4joodyy9xPtP7s';
+            }
+
+            // Get stripe
+            var stripe = Stripe(publicKey);
 
             var checkoutButton = document.getElementById('checkout-button-price_1IRbpbCpTu4joodyy9xPtP7s');
             checkoutButton.addEventListener('click', function() {
@@ -69,7 +82,7 @@
                  */
                 stripe.redirectToCheckout({
                         lineItems: [{
-                            price: 'price_1IRbpbCpTu4joodyy9xPtP7s',
+                            price: price,
                             quantity: 1,
                         }],
                         clientReferenceId: device_key,
