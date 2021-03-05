@@ -61,6 +61,8 @@
 
             var checkoutButton = document.getElementById('checkout-button-price_1IRbpbCpTu4joodyy9xPtP7s');
             checkoutButton.addEventListener('click', function() {
+                let device_key = $("#device-key").val();
+                console.log("Process payment for device key: " + device_key);
                 /*
                  * When the customer clicks on the button, redirect
                  * them to Checkout.
@@ -70,7 +72,7 @@
                             price: 'price_1IRbpbCpTu4joodyy9xPtP7s',
                             quantity: 1,
                         }],
-                        clientReferenceId: $("#device-key").val(),
+                        clientReferenceId: device_key,
                         mode: 'payment',
                         /*
                          * Do not rely on the redirect to the successUrl for fulfilling
